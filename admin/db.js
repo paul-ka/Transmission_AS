@@ -1,0 +1,6 @@
+var bdd = {
+	"eleve" : "",
+	"patients" : [
+	]
+}
+;

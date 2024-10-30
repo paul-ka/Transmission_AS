@@ -1,0 +1,18 @@
+body{
+    font-family: sans-serif;
+}
+h1{
+    background-color: blue;
+    color: white;
+}
+h2 {
+    background-color: #babaff;
+}
+h3 {
+    background-color: #e6e6fd;
+}
+h4{
+    font-weight:1.2em ;
+    font: bold ;
+    text-decoration: underline overline blue;
+}

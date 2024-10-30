@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="./db.js"></script>
+    <style>
+        body{
+            font-family: sans-serif;
+        }
+        #newbdd {
+            margin: 3px;
+            width: 99%;
+            height: 10em;
+        }
+        section{
+            display: none;
+        }
+        #sect_dossiers{
+            display: block;
+        }
+        #dossiers {
+            display:grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            font-size: 2em;
+            margin: 0% 10%;
+            button{
+                    background-color: blue;
+                    color: white;
+                    border: 0px;
+                    border-radius: 10px;
+                    padding: 8px;
+                    font-size: 1em;
+            }
+        }
+        footer{
+            background-color: #babaff;
+            form {
+                display: inline;
+            }
+            input {
+                    background-color: red;
+                    color: white;
+                    border: 0px;
+                    border-radius: 10px;
+                    padding: 8px 10%;
+                    font-size: 1em;
+                    margin: 10px;
+            }
+            button {
+                    background-color: blue;
+                    color: white;
+                    border: 0px;
+                    border-radius: 10px;
+                    padding: 8px 10%;
+                    font-size: 1em;
+                    margin: 10px;
+            }
+        }
+        #sect_admin, #sect_macro, #sect_diag, #sect_soins, #sect_trans{
+            header{
+                display:grid;
+                grid-template-columns: 1fr 2fr 2fr 2fr 2fr 2fr;
+                gap: 10px;
+                font-size: 1.2em;
+                text-align: center;
+                margin: 0px 10%;
+                padding: 5px;
+                background-color: #babaff;
+            }
+            #dossiers, .form{
+                    display:grid;
+                    grid-template-columns: 1fr 3fr;
+                    gap: 10px;
+                    font-size: 1.2em;
+                label{
+                    text-align: right;
+                    padding: 3px;
+                    margin: 3px;
+                }
+                input{
+                    padding: 3px;
+                    margin: 3px;
+                }
+                button{
+                    background-color: blue;
+                    color: white;
+                    border: 0px;
+                    border-radius: 10px;
+                    padding: 8px;
+                    font-size: 1em;
+                }
+            }
+        }
+        #sect_soins > article{
+            display:grid;
+            grid-template-columns: 1fr 1fr 1fr 3fr 3fr;
+            gap: 1px;
+            font-size: 1em;
+            text-align: center;
+            margin: 0% 10%;
+            background-color: #baffea;
+
+        }
+        #sect_trans > article{
+            display:grid;
+            grid-template-columns: 1fr 1fr 2fr 2fr 2fr;
+            gap: 1px;
+            font-size: 1em;
+            margin: 0% 10%;
+            background-color: #baffea;
+
+        }
+        .actif {
+            background-color: #6060ff;
+            padding: 3px;
+            cursor: default;
+        }
+        #popup {
+            position:absolute;
+            background-color: #babaff;
+            display: none;
+        }
+        #popup > input {
+            width:5em;
+        }
+        #popup > button {
+            background-color: #6060ff;
+        }
+    </style>
+</head>
+<body onload="init()">
+    <div id="encours"></div>
+    <section id="sect_dossiers">
+        <div id="dossiers">
+        </div>
+        <footer>
+            <p>Valider par le bouton ci-dessous et copier le texte généré dans un fichier db.js</p>
+            <textarea name="" id="newbdd"></textarea><br>
+            <button onclick="showbdd()"> Valider </button>
+            <button onclick="ajoutp()"> Ajouter un patient </button>
+        </footer>
+    </section>
+    <section id="sect_admin">
+        <header>
+            <div onclick="goto('sect_admin','sect_dossiers')">Retour</div>
+            <div class="actif">Administratif</div>
+            <div onclick="goto('sect_admin','sect_macro')">Macro cible</div>
+            <div onclick="goto('sect_admin','sect_soins')">Diagramme de soin</div>
+            <div onclick="goto('sect_admin','sect_diag')">Panneau</div>
+            <div onclick="goto('sect_admin','sect_trans')">Transmission ciblée</div>            
+
+        </header>
+        <div class="form">
+            <label for="">Civilité</label>
+            <input type="text" name="" id="pat_civil">
+        </div>
+        <div class="form">    
+            <label for="">Nom usuel</label>
+            <input type="text" name="" id="pat_nom">
+        </div>
+        <div class="form">
+            <label for="">Nom de naissance</label>
+            <input type="text" name="" id="pat_nom_nais">
+        </div>
+        <div class="form">
+            <label for="">Prénom</label>
+            <input type="text" name="" id="pat_prenom">
+        </div>
+        <div class="form">
+            <label for="">Adresse</label>
+            <input type="text" name="" id="pat_adresse">
+        </div>
+        <div class="form">
+            <label for="">Code postal</label>
+            <input type="text" name="" id="pat_codepost">
+        </div>
+        <div class="form">
+            <label for="">Ville</label>
+            <input type="text" name="" id="pat_ville">
+        </div>
+        <div class="form">
+            <label for="">Téléphone</label>
+            <input type="text" name="" id="pat_tel">
+        </div>
+        <div class="form">
+            <label for="">Personne à contacter</label>
+            <input type="text" name="" id="pat_contact">
+        </div>
+        <div class="form">
+            <label for="">Email personne à contacter</label>
+            <input type="text" name="" id="pat_contact_email">
+        </div>
+        <div class="form">
+            <label for="">Teléphone personne à contacter</label>
+            <input type="text" name="" id="pat_contact_tel">
+        </div>
+        <div class="form">
+            <label for="">Médecin référent</label>
+            <input type="text" name="" id="pat_medecin">
+        </div>
+        <div class="form">
+            <label for="">E-mail Médecin référent</label>
+            <input type="text" name="" id="pat_medecin_email">
+        </div>
+        <div class="form">
+            <label for="">Téléphone Médecin référent</label>
+            <input type="text" name="" id="pat_medecin_tel">
+        </div>
+        <div class="form">
+            <br>
+            <button onclick="val_admin()">Valider</button><br>
+        </div>
+    </section>
+    <section id="sect_macro">
+        <header>
+            <div onclick="goto('sect_macro','sect_dossiers')">Retour</div>
+            <div onclick="goto('sect_macro','sect_admin')">Administratif</div>
+            <div class="actif">Macro cible</div>
+            <div onclick="goto('sect_macro','sect_soins')">Diagramme de soin</div>
+            <div onclick="goto('sect_macro','sect_diag')">Panneau</div>
+            <div onclick="goto('sect_macro','sect_trans')">Transmission ciblée</div>            
+
+        </header>
+        <div class="form">
+            <label for="">Maladie, Mode d’entrée : Urgence, programmée, symptômes, diagnostic médical...</label>
+            <textarea name="" id="mac_maladie" cols="80" rows="10"></textarea>
+        </div>
+        <div class="form">
+            <label for="">Traitement : Antérieur, actuel, régime alimentaire, interventions médicales...</label>
+            <textarea name="" id="mac_trait" cols="80" rows="10"></textarea>
+        </div>
+        <div class="form">
+            <label for="">Vécu : Ressenti verbal du patient sur son entrée à l’institution.</label>
+            <textarea name="" id="mac_vecu" cols="80" rows="10"></textarea>
+        </div>
+        <div class="form">
+            <label for="">Environnement : Habitat, famille, vie sociale, soins à domicile, aménagement particulier...</label>
+            <textarea name="" id="mac_env" cols="80" rows="10"></textarea>
+        </div>
+        <div class="form">
+            <label for="">Développement, Devenir : Projet de sortie, placement, rééducation...</label>
+            <textarea name="" id="mac_dev" cols="80" rows="10"></textarea>
+        </div>
+    </section>
+    <section id="sect_soins">
+        <header>
+            <div onclick="goto('sect_soins','sect_dossiers')">Retour</div>
+            <div onclick="goto('sect_soins','sect_admin')">Administratif</div>
+            <div onclick="goto('sect_soins','sect_macro')">Macro cible</div>
+            <div class="actif">Diagramme de soin</div>
+            <div onclick="goto('sect_soins','sect_diag')">Panneau</div>
+            <div onclick="goto('sect_soins','sect_trans')">Transmission ciblée</div>            
+        </header>
+        <article id="tabsoin">
+        </article>
+        <footer>
+            </form>
+                <button onclick="ajoutsoin()"> + </button>
+                <button onclick="valsoin()"> Valider </button>
+        </footer>
+
+    </section>
+    <section id="sect_diag">
+        <header>
+            <div onclick="goto('sect_diag','sect_dossiers')">Retour</div>
+            <div onclick="goto('sect_diag','sect_admin')">Administratif</div>
+            <div onclick="goto('sect_diag','sect_macro')">Macro cible</div>
+            <div onclick="goto('sect_diag','sect_soins')">Diagramme de soin</div>
+            <div class="actif">Panneau</div>
+            <div onclick="goto('sect_diag','sect_trans')">Transmission ciblée</div>            
+
+        </header>
+            <div id="popup">
+                <span>Nouvelle saisie</span><br>
+                    <label for="">Heure</label>
+                    <input type="text" name="" id="saisie_heure">
+                    <label for="">FR</label>
+                    <input type="text" name="" id="saisie_fr">
+                    <label for="">URINE</label>
+                    <input type="text" name="" id="saisie_urine">
+                    <label for="">TC</label>
+                    <input type="text" name="" id="saisie_tc">
+                    <label for="">TA</label>
+                    <input type="text" name="" id="saisie_ta">
+                    <label for="">T°</label>
+                    <input type="text" name="" id="saisie_t">
+                    <input type="hidden" name="" id="saisie_id">
+                    <button onclick="hidepopup()">Valider</button><br>
+            </div>            
+            <div>Cliquer sur une colonne pour ajouter de nouvelles valeurs</div>
+        <svg
+            width="297mm"
+            height="210mm"
+            viewBox="0 0 320 210"
+            version="1.1"
+            id="svg5"
+            inkscape:version="1.1.2 (b8e25be833, 2022-02-05)"
+            xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlns:svg="http://www.w3.org/2000/svg">
+            <defs
+                id="defs2">
+                <rect
+                x="961.58927"
+                y="32.881383"
+                width="48.557391"
+                height="121.58465"
+                id="rect116598" />
+            </defs>
+            <g>
+                <style>
+                .dgdot{
+                    stroke:black;
+                    stroke-width:0.2px;
+                    stroke-dasharray:1,1;
+                }
+                .dgrect{
+                    fill:#ffffff;
+                    fill-opacity:0;
+                    fill-rule:evenodd;
+                    stroke:#000000;
+                    stroke-width:0.0976111;
+                    stroke-miterlimit:4;
+                    stroke-dasharray:none;
+                    stroke-opacity:1;
+                    width:252px;
+                    height:20px;
+                }
+                .dgcol{
+                    fill:#ffffff;
+                    fill-opacity:0;
+                    fill-rule:evenodd;
+                    stroke:#000000;
+                    stroke-width:0.0976111;
+                    stroke-miterlimit:4;
+                    stroke-dasharray:none;
+                    stroke-opacity:1;
+                    width:14px;
+                    height:170px;
+                }
+                text{
+                    font-family:Sans-serif; 
+                    font-size:3.5px; 
+                    stroke-width:0;
+                    stroke:#000000;
+                }
+                </style>
+                <g id="g2977">
+                <rect
+                    class="dgrect"
+                    x="60"
+                    y="40"/>
+                <line x1="60" y1="44" x2="312" y2="44" class="dgdot"/>
+                <line x1="60" y1="48" x2="312" y2="48" class="dgdot"/>
+                <line x1="60" y1="52" x2="312" y2="52" class="dgdot"/>
+                <line x1="60" y1="56" x2="312" y2="56" class="dgdot"/>
+                </g>
+                <g id="g2977-6">
+                <rect
+                    class="dgrect"
+                    x="60"
+                    y="60" />
+                <line x1="60" y1="64" x2="312" y2="64" class="dgdot"/>
+                <line x1="60" y1="68" x2="312" y2="68" class="dgdot"/>
+                <line x1="60" y1="72" x2="312" y2="72" class="dgdot"/>
+                <line x1="60" y1="76" x2="312" y2="76" class="dgdot"/>
+                </g>
+                <g id="g2977-9">
+                <rect
+                    class="dgrect"
+                    x="60"
+                    y="80" />
+                <line x1="60" y1="84" x2="312" y2="84" class="dgdot"/>
+                <line x1="60" y1="88" x2="312" y2="88" class="dgdot"/>
+                <line x1="60" y1="92" x2="312" y2="92" class="dgdot"/>
+                <line x1="60" y1="96" x2="312" y2="96" class="dgdot"/>
+                </g>
+                <g id="g2977-0">
+                <rect
+                    class="dgrect"
+                    x="60"
+                    y="100" />
+                <line x1="60" y1="104" x2="312" y2="104" class="dgdot"/>
+                <line x1="60" y1="108" x2="312" y2="108" class="dgdot"/>
+                <line x1="60" y1="112" x2="312" y2="112" class="dgdot"/>
+                <line x1="60" y1="116" x2="312" y2="116" class="dgdot"/>
+                </g>
+                <g id="g2977-1">
+                <rect
+                    class="dgrect"
+                    x="60"
+                    y="120" />
+                <line x1="60" y1="124" x2="312" y2="124" class="dgdot"/>
+                <line x1="60" y1="128" x2="312" y2="128" class="dgdot"/>
+                <line x1="60" y1="132" x2="312" y2="132" class="dgdot"/>
+                <line x1="60" y1="136" x2="312" y2="136" class="dgdot"/>
+                </g>
+                <g id="g2977-7">
+                <rect
+                    class="dgrect"
+                    x="60"
+                    y="140" />
+                <line x1="60" y1="144" x2="312" y2="144" class="dgdot"/>
+                <line x1="60" y1="148" x2="312" y2="148" class="dgdot"/>
+                <line x1="60" y1="152" x2="312" y2="152" class="dgdot"/>
+                <line x1="60" y1="156" x2="312" y2="156" class="dgdot"/>
+                </g>
+                <g id="g2977-5">
+                <rect
+                    class="dgrect"
+                    x="60"
+                    y="160" />
+                <line x1="60" y1="164" x2="312" y2="164" class="dgdot"/>
+                <line x1="60" y1="168" x2="312" y2="168" class="dgdot"/>
+                <line x1="60" y1="172" x2="312" y2="172" class="dgdot"/>
+                <line x1="60" y1="176" x2="312" y2="176" class="dgdot"/>
+                </g>
+                <g id="g2977-66">
+                <rect
+                    class="dgrect"
+                    x="60"
+                    y="180" />
+                <line x1="60" y1="184" x2="312" y2="184" class="dgdot"/>
+                <line x1="60" y1="188" x2="312" y2="188" class="dgdot"/>
+                <line x1="60" y1="192" x2="312" y2="192" class="dgdot"/>
+                <line x1="60" y1="196" x2="312" y2="196" class="dgdot"/>
+                </g>
+                <g id="g16816">
+                <text xml:space="preserve" x="20" y="181" fill="#000000">10</text>
+                <text xml:space="preserve" x="26" y="181" fill="#008800">500</text>
+                <text xml:space="preserve" x="36" y="181" fill="#888888">60</text>
+                <text xml:space="preserve" x="44" y="181" fill="#000088">5</text>
+                <text xml:space="preserve" x="50" y="181" fill="#880000">36°</text>
+
+                <text xml:space="preserve" x="20" y="161" fill="#000000">20</text>
+                <text xml:space="preserve" x="26" y="161" fill="#008800">1000</text>
+                <text xml:space="preserve" x="36" y="161" fill="#888888">80</text>
+                <text xml:space="preserve" x="44" y="161" fill="#000088">10</text>
+                <text xml:space="preserve" x="50" y="161" fill="#880000">37°</text>
+
+                <text xml:space="preserve" x="20" y="141" fill="#000000">30</text>
+                <text xml:space="preserve" x="26" y="141" fill="#008800">1500</text>
+                <text xml:space="preserve" x="36" y="141" fill="#888888">100</text>
+                <text xml:space="preserve" x="44" y="141" fill="#000088">15</text>
+                <text xml:space="preserve" x="50" y="141" fill="#880000">38°</text>
+
+                <text xml:space="preserve" x="20" y="121" fill="#000000">40</text>
+                <text xml:space="preserve" x="26" y="121" fill="#008800">2000</text>
+                <text xml:space="preserve" x="36" y="121" fill="#888888">120</text>
+                <text xml:space="preserve" x="44" y="121" fill="#000088">20</text>
+                <text xml:space="preserve" x="50" y="121" fill="#880000">39°</text>
+
+                <text xml:space="preserve" x="20" y="101" fill="#000000">50</text>
+                <text xml:space="preserve" x="26" y="101" fill="#008800">2500</text>
+                <text xml:space="preserve" x="36" y="101" fill="#888888">140</text>
+                <text xml:space="preserve" x="44" y="101" fill="#000088">25</text>
+                <text xml:space="preserve" x="50" y="101" fill="#880000">40°</text>
+
+                <text xml:space="preserve" x="26" y="81" fill="#008800">3000</text>
+                <text xml:space="preserve" x="36" y="81" fill="#888888">160</text>
+                <text xml:space="preserve" x="50" y="81" fill="#880000">41°</text>
+
+                <text xml:space="preserve" x="26" y="61" fill="#008800">3500</text>
+                <text xml:space="preserve" x="36" y="61" fill="#888888">180</text>
+                <text xml:space="preserve" x="50" y="61" fill="#880000">42°</text>
+
+                <text xml:space="preserve" transform="rotate(-60,24,41)" x="24" y="41" fill="#000000">FR</text>
+                <text xml:space="preserve" transform="rotate(-60,32,41)" x="32" y="41" fill="#008800">URINE</text>
+                <text xml:space="preserve" transform="rotate(-60,40,41)" x="40" y="41" fill="#888888">TC</text>
+                <text xml:space="preserve" transform="rotate(-60,48,41)" x="48" y="41" fill="#000088">TA</text>
+                <text xml:space="preserve" transform="rotate(-60,54,41)" x="54" y="41" fill="#880000">T°</text>
+
+                </g>
+                <!-- colonnes -->
+                <rect class="dgcol" x="60" y="30" onclick="showpopup(0)"/>
+                <rect class="dgcol" x="74" y="30" onclick="showpopup(1)"/>
+                <rect class="dgcol" x="88" y="30" onclick="showpopup(2)"/>
+                <rect class="dgcol" x="102" y="30" onclick="showpopup(3)"/>
+                <rect class="dgcol" x="116" y="30" onclick="showpopup(4)"/>
+                <rect class="dgcol" x="130" y="30" onclick="showpopup(5)"/>
+                <rect class="dgcol" x="144" y="30" onclick="showpopup(6)"/>
+                <rect class="dgcol" x="158" y="30" onclick="showpopup(7)"/>
+                <rect class="dgcol" x="172" y="30" onclick="showpopup(8)"/>
+                <rect class="dgcol" x="186" y="30" onclick="showpopup(9)"/>
+                <rect class="dgcol" x="200" y="30" onclick="showpopup(10)"/>
+                <rect class="dgcol" x="214" y="30" onclick="showpopup(11)"/>
+                <rect class="dgcol" x="228" y="30" onclick="showpopup(12)"/>
+                <rect class="dgcol" x="242" y="30" onclick="showpopup(13)"/>
+                <rect class="dgcol" x="256" y="30" onclick="showpopup(14)"/>
+                <rect class="dgcol" x="270" y="30" onclick="showpopup(15)"/>
+                <rect class="dgcol" x="284" y="30" onclick="showpopup(16)"/>
+                <rect class="dgcol" x="298" y="30" onclick="showpopup(17)"/>
+             </g>
+             <g id="dgcontainer">
+
+             </g>
+        </svg>
+
+    </section>
+    <section id="sect_trans">
+        <header>
+            <div onclick="goto('sect_trans','sect_dossiers')">Retour</div>
+            <div onclick="goto('sect_trans','sect_admin')">Administratif</div>
+            <div onclick="goto('sect_trans','sect_macro')">Macro cible</div>
+            <div onclick="goto('sect_trans','sect_soins')">Diagramme de soin</div>
+            <div onclick="goto('sect_trans','sect_diag')">Panneau</div>
+            <div class="actif">Transmission ciblée</div>            
+        </header>
+        <article id="saisietrans">
+            <div>Date/heure</div>
+            <div>Cible</div>
+            <div>Données</div>
+            <div>Actions</div>
+            <div>Résultat</div>
+        </article>
+        <footer>
+            </form>
+                <button onclick="ajouttransvide()"> + </button>
+                <button onclick="valtrans()"> Valider </button>
+        </footer>
+    </section>
+    <script>
+        var _id = 0;
+        var nbsoin = 0;
+        var tabsoin = `
+            <div>Date</div>
+            <div>Heure</div>
+            <div>Réalisé</div>
+            <div>Soin</div>
+            <div>Observation</div>`;
+        var tramesoin =`
+        <input type="text" value="{{dat}}" {{did}}>
+        <input type="text" value="{{heu}}" {{hid}}>
+        <input type="checkbox" {{rea}}  {{rid}}>
+        <select {{sid}}>
+            <option value="">.</option>
+            <option value="1" {{o1}}>ALIMENTATION - Aide au repas partiel</option>
+            <option value="2" {{o2}}>ALIMENTATION - Aide au repas complet</option>
+            <option value="3" {{o3}}>HYGIENE - Habillage/déshabillage</option>
+            <option value="4" {{o4}}>HYGIENE - Surveillance lavage</option>
+            <option value="5" {{o5}}>HYGIENE - Change du malade partiel</option>
+            <option value="6" {{o6}}>HYGIENE - Change du malade complet</option>
+            <option value="7" {{o7}}>ELIMINATION - Pose bassin urinal</option>
+            <option value="8" {{o8}}>ELIMINATION - Changement de poche</option>
+            <option value="9" {{o9}}>LOCOMOTION - Installation (lit, fauteuil, WC)</option>
+            <option value="10" {{o10}}>LOCOMOTION - Aide au lever/coucher</option>
+            <option value="11" {{o11}}>LOCOMOTION - Aide dans déplacements</option>
+            <option value="12" {{o12}}>SECURITE - Installation barrières protection</option>
+            <option value="13" {{o13}}>SOIN TECH. - Surveillance abord vasculaire</option>
+            <option value="14" {{o14}}>SOIN TECH. - Grand pansement</option>
+            <option value="15" {{o15}}>SOIN TECH. - Moyen pansement</option>
+            <option value="16" {{o16}}>SOIN TECH. - Petit pansement</option>
+            <option value="17" {{o17}}>SOIN EDUC. - Information malade</option>
+            <option value="18" {{o18}}>SOIN EDUC. - Information famille</option>
+            <option value="19" {{o19}}>SOIN EDUC. - Education malade/famille</option>
+            <option value="20" {{o20}}>SOIN EDUC. - Relation d'aide</option>
+            <option value="21" {{o21}}>SOIN EDUC. - Evaluation éducation patient</option>
+        </select>
+        <input type="text" value="{{obs}}" {{oid}}>`
+
+        function init(){            
+                let destBouton = document.getElementById("dossiers");
+                bdd.patients.forEach(function(element, indice) {
+                    destBouton.innerHTML+=`<button onclick="gotoAdmin(${indice})">${element.nom} ${element.prenom}</button>`
+                });
+                document.getElementById("sect_dossiers").style.display = "block";
+        }
+        function showbdd() {
+            document.getElementById('newbdd').value = "var bdd = " + JSON.stringify(bdd) + ";";
+        }
+
+        function gotoAdmin(id){     //quand on vient du choix du patient => actualisation 
+            _id = id;
+            document.getElementById('encours').innerHTML =`<svg
+   width="20"
+   height="20"
+   viewBox="0 0 120 120"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <g>
+    <path style="fill:#d45500;stroke:#000000;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0"
+       d="M 67.5,0.7 C 47.7,0.7 31,31 31,49 c 0.02,10.8 11.8,10.3 21.6,16.4 1.6,8.9 -21.6,10.6 -21.6,21.6 0,8.9 0.1,22.1 0.3,32 l 73.3,-0.4 c 0,0 -1,-13.75491 -1,-31.6 C 103.6,76.7 82.04,75.3 82.2,65.3 92.1,59.2 102.4,60.4 102.4,49.5 102.4,31.4 87.2,0.7 67.5,0.7 Z"/>
+  </g>
+</svg>
+`
+            document.getElementById('encours').innerHTML += bdd.patients[id].prenom + " " + bdd.patients[id].nom;
+            document.getElementById('pat_civil').value = bdd.patients[id].civilite?bdd.patients[id].civilite:"";
+            document.getElementById('pat_nom').value = bdd.patients[id].nom?bdd.patients[id].nom:"";
+            document.getElementById('pat_nom_nais').value = bdd.patients[id].nom_nais?bdd.patients[id].nom_nais:"";
+            document.getElementById('pat_prenom').value = bdd.patients[id].prenom?bdd.patients[id].prenom:"";
+            document.getElementById('pat_adresse').value = bdd.patients[id].adresse?bdd.patients[id].adresse:"";
+            document.getElementById('pat_codepost').value = bdd.patients[id].codepost?bdd.patients[id].codepost:"";
+            document.getElementById('pat_ville').value = bdd.patients[id].ville?bdd.patients[id].ville:"";
+            document.getElementById('pat_tel').value = bdd.patients[id].tel?bdd.patients[id].tel:"";
+            document.getElementById('pat_contact').value = bdd.patients[id].contact?bdd.patients[id].contact:"";
+            document.getElementById('pat_contact_email').value = bdd.patients[id].contact_email?bdd.patients[id].contact_email:"";
+            document.getElementById('pat_contact_tel').value = bdd.patients[id].contact_tel?bdd.patients[id].contact_tel:"";
+            document.getElementById('pat_medecin').value = bdd.patients[id].medecin?bdd.patients[id].medecin:"";
+            document.getElementById('pat_medecin_email').value = bdd.patients[id].medecin_email?bdd.patients[id].medecin_email:"";
+            document.getElementById('pat_medecin_tel').value = bdd.patients[id].medecin_tel?bdd.patients[id].medecin_tel:"";
+
+            document.getElementById('mac_maladie').value = bdd.patients[id].mac_maladie?bdd.patients[id].mac_maladie:"";
+            document.getElementById('mac_trait').value = bdd.patients[id].mac_trait?bdd.patients[id].mac_trait:"";
+            document.getElementById('mac_vecu').value = bdd.patients[id].mac_vecu?bdd.patients[id].mac_vecu:"";
+            document.getElementById('mac_env').value = bdd.patients[id].mac_env?bdd.patients[id].mac_env:"";
+            document.getElementById('mac_dev').value = bdd.patients[id].mac_dev?bdd.patients[id].mac_dev:"";
+
+            document.getElementById('sect_admin').style.display = "block";
+            majpanneau(id);
+
+            // efface tableau de soin
+            document.getElementById("tabsoin").innerHTML = tabsoin; 
+            // ajoute tableau de soin du patient
+            nbsoin = 0;
+            if(bdd.patients[id].soin){
+                bdd.patients[id].soin.forEach(function(element, indice) {
+                    let dat = bdd.patients[id].soin[indice].date;
+                    let heu = bdd.patients[id].soin[indice].heure;
+                    let rea = bdd.patients[id].soin[indice].realise;
+                    let soi = bdd.patients[id].soin[indice].soin;
+                    let obs = bdd.patients[id].soin[indice].obs;
+                    ajoutsoin(dat, heu, rea, soi, obs, indice);
+                })
+            }
+            cleartrans();
+            if(bdd.patients[id].trans){
+                bdd.patients[id].trans.forEach(function(element, indice) {
+                    let dat = bdd.patients[id].trans[indice].date;
+                    let cible = bdd.patients[id].trans[indice].cible;
+                    let donnees = bdd.patients[id].trans[indice].données;
+                    let action = bdd.patients[id].trans[indice].action;
+                    let resultat = bdd.patients[id].trans[indice].résultat;
+                    ajouttrans(dat, cible, donnees, action, resultat);
+                })
+            }
+            const allsections = document.querySelectorAll("section");
+
+            allsections.forEach(function (userItem) {
+                userItem.style.display = "block";
+            });
+
+        }
+        //mise à jour du Panneau lors de la sélection d'un patient ou de la saisie de paramètre vitaux
+        function majpanneau(id){       
+            // test SVG
+            let svg = document.getElementById("dgcontainer");
+            let circle;
+            // Efface les anciens cercles
+            svg.innerHTML="";
+            // lit les données du nouveau patient
+            svg1 = document.getElementById("dgcol1");
+            if(bdd.patients[id].dg){
+                bdd.patients[id].dg.forEach(function(element, indice) {
+                    let Txt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                    Txt.setAttribute('x', indice * 14 + 65);
+                    Txt.setAttribute('y', '36');
+                    Txt.setAttribute('fill', '#000000');
+                    Txt.textContent = bdd.patients[id].dg[indice].heure + "h";
+                    svg.appendChild(Txt);
+                    if(bdd.patients[id].dg){
+                        if(bdd.patients[id].dg[indice]){
+                            if((bdd.patients[id].dg[indice].fr)!=='' && parseInt(bdd.patients[id].dg[indice].fr)){
+                                circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                                circle.setAttribute('fill', '#000000');
+                                circle.setAttribute('cx',  indice * 14 + 63);
+                                circle.setAttribute('cy', 200 - (parseInt(bdd.patients[id].dg[indice].fr.replace(",", ".")) * 2));
+                                circle.setAttribute('r', '2');
+                                svg.appendChild(circle);
+                            }
+                            if((bdd.patients[id].dg[indice].urine)!=='' && parseFloat(bdd.patients[id].dg[indice].urine)){
+                                circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                                circle.setAttribute('fill', '#008800');
+                                circle.setAttribute('cx',  indice * 14 + 65);
+                                circle.setAttribute('cy', 200 - (parseFloat(bdd.patients[id].dg[indice].urine.replace(",", ".")) / 25));
+                                circle.setAttribute('r', '2');
+                                svg.appendChild(circle);
+                            }
+                            if((bdd.patients[id].dg[indice].tc)!=='' && parseFloat(bdd.patients[id].dg[indice].tc)){
+                                circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                                circle.setAttribute('fill', '#888888');
+                                circle.setAttribute('cx',  indice * 14 + 67);
+                                circle.setAttribute('cy', 240 - (parseFloat(bdd.patients[id].dg[indice].tc.replace(",", "."))));
+                                circle.setAttribute('r', '2');
+                                svg.appendChild(circle);
+                            }
+                            if((bdd.patients[id].dg[indice].ta)!=='' && parseFloat(bdd.patients[id].dg[indice].ta)){
+                                circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                                circle.setAttribute('fill', '#000088');
+                                circle.setAttribute('cx',  indice * 14 + 69);
+                                circle.setAttribute('cy', 200 - (parseFloat(bdd.patients[id].dg[indice].ta.replace(",", ".")) * 4));
+                                circle.setAttribute('r', '2');
+                                svg.appendChild(circle);
+                            }
+                            if((bdd.patients[id].dg[indice].t)!=='' && parseFloat(bdd.patients[id].dg[indice].t)){
+                                circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                                circle.setAttribute('fill', '#880000');
+                                circle.setAttribute('cx',  indice * 14 + 71);
+                                circle.setAttribute('cy', 900 - (parseFloat(bdd.patients[id].dg[indice].t.replace(",", ".")) * 20));
+                                circle.setAttribute('r', '2');
+                                svg.appendChild(circle);
+                            }
+
+                        }
+                    }
+                });
+            }
+        }
+
+        function ajoutp(){          //Ajout patient --> crée l'entrée dans le JSON
+            let rep = prompt("Nom du nouveau patient");
+            if(rep != ""){
+                let nb = bdd.patients.length;
+                bdd.patients.push({nom:rep});
+                document.getElementById("dossiers").innerHTML+=`<button onclick="gotoAdmin(${nb})">${rep}</button>`
+            }
+        }
+        function ajoutsoin(dat, heu, rea, soi, obs){
+            // sauve les anciennes saisies
+            let ancien = [];
+            for(let i = 0; i < nbsoin; i++){
+                ancien.push({});
+                ancien[i].date = document.getElementById("dat"+i).value;
+                ancien[i].heure = document.getElementById("heu"+i).value;
+                ancien[i].realise = document.getElementById("rea"+i).checked;
+                ancien[i].soin = document.getElementById("soi"+i).value;
+                ancien[i].obs = document.getElementById("obs"+i).value;
+            }
+            console.dir(ancien);
+            // crée la nouvelle saisie
+            let tampon = tramesoin.replace("{{dat}}",dat?dat:"").replace("{{heu}}",heu?heu:"")
+            .replace("{{rea}}",rea=="oui"?"checked":"")
+            .replace("{{did}}"," id='dat"+nbsoin+"'")
+            .replace("{{hid}}"," id='heu"+nbsoin+"'")
+            .replace("{{rid}}"," id='rea"+nbsoin+"'")
+            .replace("{{sid}}"," id='soi"+nbsoin+"'")
+            .replace("{{oid}}"," id='obs"+nbsoin+"'")
+            .replace("{{obs}}",obs?obs:"")
+            .replace("{{o1}}",soi=="1"?"selected":"")
+            .replace("{{o2}}",soi=="2"?"selected":"")
+            .replace("{{o3}}",soi=="3"?"selected":"")
+            .replace("{{o4}}",soi=="4"?"selected":"")
+            .replace("{{o5}}",soi=="5"?"selected":"")
+            .replace("{{o6}}",soi=="6"?"selected":"")
+            .replace("{{o7}}",soi=="7"?"selected":"")
+            .replace("{{o8}}",soi=="8"?"selected":"")
+            .replace("{{o9}}",soi=="9"?"selected":"")
+            .replace("{{o10}}",soi=="10"?"selected":"")
+            .replace("{{o11}}",soi=="11"?"selected":"")
+            .replace("{{o12}}",soi=="12"?"selected":"")
+            .replace("{{o13}}",soi=="13"?"selected":"")
+            .replace("{{o14}}",soi=="14"?"selected":"")
+            .replace("{{o15}}",soi=="15"?"selected":"")
+            .replace("{{o16}}",soi=="16"?"selected":"")
+            .replace("{{o17}}",soi=="17"?"selected":"")
+            .replace("{{o18}}",soi=="18"?"selected":"")
+            .replace("{{o19}}",soi=="19"?"selected":"")
+            .replace("{{o20}}",soi=="20"?"selected":"")
+            .replace("{{o21}}",soi=="21"?"selected":"");
+            document.getElementById("tabsoin").innerHTML += tampon;
+            //restaure les anciennes saisies
+            for(let i = 0; i < nbsoin; i++){
+                document.getElementById("dat"+i).value = ancien[i].date;
+                document.getElementById("heu"+i).value = ancien[i].heure;
+                document.getElementById("rea"+i).checked = ancien[i].realise;
+                document.getElementById("soi"+i).value = ancien[i].soin;
+                document.getElementById("obs"+i).value = ancien[i].obs;
+            }
+
+            ++nbsoin;
+        }
+        function valsoin(){
+            Array.from(document.getElementById("tabsoin").children).forEach(function(element, indice) {
+                if(element.id !== ""){              //test que l'element est bien un input ou un select
+                    let champ = element.id.substring(0,3);      //les 3 premiers caractères correspond au champ
+                    let no = element.id.substring(3);           //les caractères suivants correspondent à la ligne
+                    console.dir(bdd.patients[_id]);
+                    console.log(champ + " - " + no);
+                    if(bdd.patients[_id].soin == undefined){bdd.patients[_id].soin = [];}  // crée le tableau soin si nécessaire
+                    if(bdd.patients[_id].soin[no] == undefined){bdd.patients[_id].soin.push({"date":"","heure":"","realise":"","soin":"","obs":""});}  // crée le soin si nécessaire
+                    switch (champ) {
+                        case 'dat':
+                            bdd.patients[_id].soin[no].date = element.value;
+                            break;
+                        case 'heu':
+                            bdd.patients[_id].soin[no].heure = element.value;
+                            break;
+                        case 'rea':
+                            bdd.patients[_id].soin[no].realise = element.checked?"oui":"";
+                            break;
+                        case 'soi':
+                            bdd.patients[_id].soin[no].soin = element.value;
+                            break;
+                        case 'obs':
+                            bdd.patients[_id].soin[no].obs = element.value;
+                            break;
+                        default:
+                            console.log(`Pb Champ = ${champ}.`);
+                    }
+                };
+            });
+        }
+        function val_admin(){
+            bdd.patients[_id].civilite = document.getElementById('pat_civil').value;
+            bdd.patients[_id].nom = document.getElementById('pat_nom').value;
+            bdd.patients[_id].nom_nais = document.getElementById('pat_nom_nais').value;
+            bdd.patients[_id].prenom = document.getElementById('pat_prenom').value;
+            bdd.patients[_id].adresse = document.getElementById('pat_adresse').value;
+            bdd.patients[_id].codepost = document.getElementById('pat_codepost').value;
+            bdd.patients[_id].ville = document.getElementById('pat_ville').value;
+            bdd.patients[_id].tel = document.getElementById('pat_tel').value;
+            bdd.patients[_id].contact = document.getElementById('pat_contact').value;
+            bdd.patients[_id].contact_email = document.getElementById('pat_contact_email').value;
+            bdd.patients[_id].contact_tel = document.getElementById('pat_contact_tel').value;
+            bdd.patients[_id].medecin = document.getElementById('pat_medecin').value;
+            bdd.patients[_id].medecin_email = document.getElementById('pat_medecin_email').value;
+            bdd.patients[_id].medecin_tel = document.getElementById('pat_medecin_tel').value;
+
+            bdd.patients[_id].mac_maladie = document.getElementById('mac_maladie').value;
+            bdd.patients[_id].mac_trait = document.getElementById('mac_trait').value;
+            bdd.patients[_id].mac_vecu = document.getElementById('mac_vecu').value;
+            bdd.patients[_id].mac_env = document.getElementById('mac_env').value;
+            bdd.patients[_id].mac_dev = document.getElementById('mac_dev').value;
+            alert("Les modifications sont validée.");
+        }
+
+        function goto(origine, destination){        //change de page active
+            if(destination == 'sect_dossiers') {
+                document.getElementById("phpreponse").value = JSON.stringify(bdd);
+            }
+        }
+
+        function showpopup(numero){
+            if(!bdd.patients[_id].dg){
+                bdd.patients[_id].dg =[];
+            }
+            document.getElementById("saisie_heure").value = bdd.patients[_id].dg[numero] ? bdd.patients[_id].dg[numero].heure ? bdd.patients[_id].dg[numero].heure : "" : "";
+            document.getElementById("saisie_fr").value = bdd.patients[_id].dg[numero] ? bdd.patients[_id].dg[numero].fr ? bdd.patients[_id].dg[numero].fr : "" : "";
+            document.getElementById("saisie_urine").value = bdd.patients[_id].dg[numero] ? bdd.patients[_id].dg[numero].urine ? bdd.patients[_id].dg[numero].urine : "" : "";
+            document.getElementById("saisie_tc").value = bdd.patients[_id].dg[numero] ? bdd.patients[_id].dg[numero].tc ? bdd.patients[_id].dg[numero].tc : "" : "";
+            document.getElementById("saisie_ta").value = bdd.patients[_id].dg[numero] ? bdd.patients[_id].dg[numero].ta ? bdd.patients[_id].dg[numero].ta : "" : "";
+            document.getElementById("saisie_t").value = bdd.patients[_id].dg[numero] ? bdd.patients[_id].dg[numero].t ? bdd.patients[_id].dg[numero].t : "" : "";
+            document.getElementById("saisie_id").value = numero;
+            document.getElementById("popup").style.display = "block";
+        }
+        function hidepopup(){
+            let sid = document.getElementById("saisie_id").value;
+            if(!bdd.patients[_id].dg[sid]){bdd.patients[_id].dg[sid]=new Object();}
+            bdd.patients[_id].dg[sid].heure = document.getElementById("saisie_heure").value;
+            bdd.patients[_id].dg[sid].fr = document.getElementById("saisie_fr").value;
+            bdd.patients[_id].dg[sid].urine = document.getElementById("saisie_urine").value;
+            bdd.patients[_id].dg[sid].tc = document.getElementById("saisie_tc").value;
+            bdd.patients[_id].dg[sid].ta = document.getElementById("saisie_ta").value;
+            bdd.patients[_id].dg[sid].t = document.getElementById("saisie_t").value;
+            majpanneau(_id);
+            document.getElementById("popup").style.display = "none";
+        }
+        function ajouttransvide(){                              //crée les zones à remplir
+            let zone = document.getElementById("saisietrans");
+            let champ = document.createElement("input");
+            champ.setAttribute("type", "text");
+            champ.setAttribute("size", 10);
+            zone.appendChild(champ);
+            champ = document.createElement("input");
+            champ.setAttribute("type", "text");
+            champ.setAttribute("size", 10);
+            zone.appendChild(champ);
+            champ = document.createElement("input");
+            champ.setAttribute("type", "text");
+            champ.setAttribute("size", 10);
+            zone.appendChild(champ);
+            champ = document.createElement("input");
+            champ.setAttribute("type", "text");
+            champ.setAttribute("size", 10);
+            zone.appendChild(champ);
+            champ = document.createElement("input");
+            champ.setAttribute("type", "text");
+            champ.setAttribute("size", 10);
+            zone.appendChild(champ);
+
+        }
+        function ajouttrans(dat, cible, donnees, action, resultat){                              //crée les zones à remplir
+            let zone = document.getElementById("saisietrans");
+            let champ = document.createElement("input");
+            champ.setAttribute("type", "text");
+            champ.setAttribute("size", 10);
+            champ.setAttribute("value", dat);
+            zone.appendChild(champ);
+            champ = document.createElement("input");
+            champ.setAttribute("type", "text");
+            champ.setAttribute("size", 10);
+            champ.setAttribute("value", cible);
+            zone.appendChild(champ);
+            champ = document.createElement("input");
+            champ.setAttribute("type", "text");
+            champ.setAttribute("size", 10);
+            champ.setAttribute("value", donnees);
+            zone.appendChild(champ);
+            champ = document.createElement("input");
+            champ.setAttribute("type", "text");
+            champ.setAttribute("size", 10);
+            champ.setAttribute("value", action);
+            zone.appendChild(champ);
+            champ = document.createElement("input");
+            champ.setAttribute("type", "text");
+            champ.setAttribute("size", 10);
+            champ.setAttribute("value", resultat);
+            zone.appendChild(champ);
+
+        }
+        function valtrans(){                                    //sauve dans bdd les trans qui ont été créées
+            let fistinput = 0;
+            for(let i=document.getElementById("saisietrans").childNodes.length-1;i>0;i--){
+                if(document.getElementById("saisietrans").childNodes[i].localName=="input"){firstinput=i;};
+            }
+            for(let i=firstinput; i<document.getElementById("saisietrans").childNodes.length;i=i+5){
+                if(bdd.patients[_id].trans == undefined){bdd.patients[_id].trans = [];}  // crée le tableau soin si nécessaire
+                bdd.patients[_id].trans.push({
+                    "date":document.getElementById("saisietrans").childNodes[i].value,
+                    "cible":document.getElementById("saisietrans").childNodes[i+1].value,
+                    "données":document.getElementById("saisietrans").childNodes[i+2].value,
+                    "action":document.getElementById("saisietrans").childNodes[i+3].value,
+                    "résultat":document.getElementById("saisietrans").childNodes[i+4].value
+                });
+            };
+        }
+        function cleartrans(){                                  //efface les transmission lors du changement de patients
+            let transvide =`
+            <div>Date/heure</div>
+            <div>Cible</div>
+            <div>Données</div>
+            <div>Actions</div>
+            <div>Résultat</div>`;
+        document.getElementById("saisietrans").innerHTML=transvide;
+        }
+
+    </script>
+
+</body>
+</html>
