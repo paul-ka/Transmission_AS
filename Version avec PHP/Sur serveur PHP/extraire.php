@@ -50,7 +50,7 @@ if (empty($date)){
             if (!empty($heures)){
                 foreach( $heures as $heure ) {
                     echo "<b>A {$heure->heure} heure : </b>FR = {$heure->fr} Urine = {$heure->urine} ";
-                    echo "TC = {$heure->tc} TA = {$heure->ta} Température = {$heure->t}.<br>";
+                    echo "FC = {$heure->fc} TA = {$heure->ta} Température = {$heure->t}.<br>";
                 }
             }
             $lignes = $pat->soin;
