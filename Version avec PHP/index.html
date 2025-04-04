@@ -160,10 +160,8 @@
         <div id="dossiers">
         </div>
         <footer>
-            <!-- ##############################################################################
-                        Remplaceer ????? par le chemin d'accès à votre chichier sauve.php
-                 ##############################################################################-->
-            <form action="?????/sauve.php" method="post">
+            <form action="https://0281010w.etab.giprecia.org/plateformeAS/sauve.php" method="post">
+            <!-- <form action="./plateformeAS/sauve.php" method="post">ligne à remplacer par la ligne suppérieur -->
                 <input type="hidden" name="nom" id="phpnom" value="">
                 <input type="hidden" name="reponse" id="phpreponse" value="">
                 <input type="submit" value="Valider"/>
@@ -313,8 +311,8 @@
                     <input type="text" name="" id="saisie_fr">
                     <label for="">URINE</label>
                     <input type="text" name="" id="saisie_urine">
-                    <label for="">TC</label>
-                    <input type="text" name="" id="saisie_tc">
+                    <label for="">FC</label>
+                    <input type="text" name="" id="saisie_fc">
                     <label for="">TA</label>
                     <input type="text" name="" id="saisie_ta">
                     <label for="">T°</label>
@@ -501,7 +499,7 @@
 
                 <text xml:space="preserve" transform="rotate(-60,24,41)" x="24" y="41" fill="#000000">FR</text>
                 <text xml:space="preserve" transform="rotate(-60,32,41)" x="32" y="41" fill="#008800">URINE</text>
-                <text xml:space="preserve" transform="rotate(-60,40,41)" x="40" y="41" fill="#888888">TC</text>
+                <text xml:space="preserve" transform="rotate(-60,40,41)" x="40" y="41" fill="#888888">FC</text>
                 <text xml:space="preserve" transform="rotate(-60,48,41)" x="48" y="41" fill="#000088">TA</text>
                 <text xml:space="preserve" transform="rotate(-60,54,41)" x="54" y="41" fill="#880000">T°</text>
 
@@ -711,11 +709,11 @@
                                 circle.setAttribute('r', '2');
                                 svg.appendChild(circle);
                             }
-                            if((bdd.patients[id].dg[indice].tc)!=='' && parseFloat(bdd.patients[id].dg[indice].tc)){
+                            if((bdd.patients[id].dg[indice].fc)!=='' && parseFloat(bdd.patients[id].dg[indice].fc)){
                                 circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
                                 circle.setAttribute('fill', '#888888');
                                 circle.setAttribute('cx',  indice * 14 + 67);
-                                circle.setAttribute('cy', 240 - (parseFloat(bdd.patients[id].dg[indice].tc.replace(",", "."))));
+                                circle.setAttribute('cy', 240 - (parseFloat(bdd.patients[id].dg[indice].fc.replace(",", "."))));
                                 circle.setAttribute('r', '2');
                                 svg.appendChild(circle);
                             }
@@ -865,7 +863,6 @@
             bdd.patients[_id].mac_dev = document.getElementById('mac_dev').value;
             alert("Les modifications sont validée.");
         }
-
         function goto(origine, destination){        //change de page active
             document.getElementById(origine).style.display = "none";
             document.getElementById(destination).style.display = "block";
@@ -881,7 +878,7 @@
             document.getElementById("saisie_heure").value = bdd.patients[_id].dg[numero] ? bdd.patients[_id].dg[numero].heure ? bdd.patients[_id].dg[numero].heure : "" : "";
             document.getElementById("saisie_fr").value = bdd.patients[_id].dg[numero] ? bdd.patients[_id].dg[numero].fr ? bdd.patients[_id].dg[numero].fr : "" : "";
             document.getElementById("saisie_urine").value = bdd.patients[_id].dg[numero] ? bdd.patients[_id].dg[numero].urine ? bdd.patients[_id].dg[numero].urine : "" : "";
-            document.getElementById("saisie_tc").value = bdd.patients[_id].dg[numero] ? bdd.patients[_id].dg[numero].tc ? bdd.patients[_id].dg[numero].tc : "" : "";
+            document.getElementById("saisie_fc").value = bdd.patients[_id].dg[numero] ? bdd.patients[_id].dg[numero].fc ? bdd.patients[_id].dg[numero].fc : "" : "";
             document.getElementById("saisie_ta").value = bdd.patients[_id].dg[numero] ? bdd.patients[_id].dg[numero].ta ? bdd.patients[_id].dg[numero].ta : "" : "";
             document.getElementById("saisie_t").value = bdd.patients[_id].dg[numero] ? bdd.patients[_id].dg[numero].t ? bdd.patients[_id].dg[numero].t : "" : "";
             document.getElementById("saisie_id").value = numero;
@@ -893,7 +890,7 @@
             bdd.patients[_id].dg[sid].heure = document.getElementById("saisie_heure").value;
             bdd.patients[_id].dg[sid].fr = document.getElementById("saisie_fr").value;
             bdd.patients[_id].dg[sid].urine = document.getElementById("saisie_urine").value;
-            bdd.patients[_id].dg[sid].tc = document.getElementById("saisie_tc").value;
+            bdd.patients[_id].dg[sid].fc = document.getElementById("saisie_fc").value;
             bdd.patients[_id].dg[sid].ta = document.getElementById("saisie_ta").value;
             bdd.patients[_id].dg[sid].t = document.getElementById("saisie_t").value;
             majpanneau(_id);
