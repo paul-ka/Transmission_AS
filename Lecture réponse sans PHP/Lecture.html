@@ -657,53 +657,57 @@
                     Txt.setAttribute('x', indice * 14 + 65);
                     Txt.setAttribute('y', '36');
                     Txt.setAttribute('fill', '#000000');
-                    Txt.textContent = bdd.patients[id].dg[indice].heure + "h";
-                    svg.appendChild(Txt);
-                    if(bdd.patients[id].dg){
-                        if(bdd.patients[id].dg[indice]){
-                            if((bdd.patients[id].dg[indice].fr)!=='' && parseInt(bdd.patients[id].dg[indice].fr)){
-                                circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-                                circle.setAttribute('fill', '#000000');
-                                circle.setAttribute('cx',  indice * 14 + 63);
-                                circle.setAttribute('cy', 200 - (parseInt(bdd.patients[id].dg[indice].fr.replace(",", ".")) * 2));
-                                circle.setAttribute('r', '2');
-                                svg.appendChild(circle);
-                            }
-                            if((bdd.patients[id].dg[indice].urine)!=='' && parseFloat(bdd.patients[id].dg[indice].urine)){
-                                circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-                                circle.setAttribute('fill', '#008800');
-                                circle.setAttribute('cx',  indice * 14 + 65);
-                                circle.setAttribute('cy', 200 - (parseFloat(bdd.patients[id].dg[indice].urine.replace(",", ".")) / 25));
-                                circle.setAttribute('r', '2');
-                                svg.appendChild(circle);
-                            }
-                            if((bdd.patients[id].dg[indice].fc)!=='' && parseFloat(bdd.patients[id].dg[indice].fc)){
-                                circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-                                circle.setAttribute('fill', '#888888');
-                                circle.setAttribute('cx',  indice * 14 + 67);
-                                circle.setAttribute('cy', 240 - (parseFloat(bdd.patients[id].dg[indice].fc.replace(",", "."))));
-                                circle.setAttribute('r', '2');
-                                svg.appendChild(circle);
-                            }
-                            if((bdd.patients[id].dg[indice].ta)!=='' && parseFloat(bdd.patients[id].dg[indice].ta)){
-                                circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-                                circle.setAttribute('fill', '#000088');
-                                circle.setAttribute('cx',  indice * 14 + 69);
-                                circle.setAttribute('cy', 200 - (parseFloat(bdd.patients[id].dg[indice].ta.replace(",", ".")) * 4));
-                                circle.setAttribute('r', '2');
-                                svg.appendChild(circle);
-                            }
-                            if((bdd.patients[id].dg[indice].t)!=='' && parseFloat(bdd.patients[id].dg[indice].t)){
-                                circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-                                circle.setAttribute('fill', '#880000');
-                                circle.setAttribute('cx',  indice * 14 + 71);
-                                circle.setAttribute('cy', 900 - (parseFloat(bdd.patients[id].dg[indice].t.replace(",", ".")) * 20));
-                                circle.setAttribute('r', '2');
-                                svg.appendChild(circle);
-                            }
+                    if(bdd.patients[id].dg[indice] != null){
+                        Txt.textContent = bdd.patients[id].dg[indice].heure;
+                        if(!Txt.textContent.includes('h')){Txt.textContent = Txt.textContent+ 'h'}
+                        svg.appendChild(Txt);
+                        if(bdd.patients[id].dg){
+                            if(bdd.patients[id].dg[indice]){
+                                if((bdd.patients[id].dg[indice].fr)!=='' && parseInt(bdd.patients[id].dg[indice].fr)){
+                                    circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                                    circle.setAttribute('fill', '#000000');
+                                    circle.setAttribute('cx',  indice * 14 + 63);
+                                    circle.setAttribute('cy', 200 - (parseInt(bdd.patients[id].dg[indice].fr.replace(",", ".")) * 2));
+                                    circle.setAttribute('r', '2');
+                                    svg.appendChild(circle);
+                                }
+                                if((bdd.patients[id].dg[indice].urine)!=='' && parseFloat(bdd.patients[id].dg[indice].urine)){
+                                    circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                                    circle.setAttribute('fill', '#008800');
+                                    circle.setAttribute('cx',  indice * 14 + 65);
+                                    circle.setAttribute('cy', 200 - (parseFloat(bdd.patients[id].dg[indice].urine.replace(",", ".")) / 25));
+                                    circle.setAttribute('r', '2');
+                                    svg.appendChild(circle);
+                                }
+                                if((bdd.patients[id].dg[indice].fc)!=='' && parseFloat(bdd.patients[id].dg[indice].fc)){
+                                    circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                                    circle.setAttribute('fill', '#888888');
+                                    circle.setAttribute('cx',  indice * 14 + 67);
+                                    circle.setAttribute('cy', 240 - (parseFloat(bdd.patients[id].dg[indice].fc.replace(",", "."))));
+                                    circle.setAttribute('r', '2');
+                                    svg.appendChild(circle);
+                                }
+                                if((bdd.patients[id].dg[indice].ta)!=='' && parseFloat(bdd.patients[id].dg[indice].ta)){
+                                    circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                                    circle.setAttribute('fill', '#000088');
+                                    circle.setAttribute('cx',  indice * 14 + 69);
+                                    circle.setAttribute('cy', 200 - (parseFloat(bdd.patients[id].dg[indice].ta.replace(",", ".")) * 4));
+                                    circle.setAttribute('r', '2');
+                                    svg.appendChild(circle);
+                                }
+                                if((bdd.patients[id].dg[indice].t)!=='' && parseFloat(bdd.patients[id].dg[indice].t)){
+                                    circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                                    circle.setAttribute('fill', '#880000');
+                                    circle.setAttribute('cx',  indice * 14 + 71);
+                                    circle.setAttribute('cy', 900 - (parseFloat(bdd.patients[id].dg[indice].t.replace(",", ".")) * 20));
+                                    circle.setAttribute('r', '2');
+                                    svg.appendChild(circle);
+                                }
 
-                        }
+                            }
+                        }                        
                     }
+
                 });
             }
         }
