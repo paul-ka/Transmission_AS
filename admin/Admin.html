@@ -137,20 +137,18 @@
         <div id="dossiers">
         </div>
         <footer>
-            <p>Valider par le bouton ci-dessous et copier le texte généré dans un fichier db.js</p>
-            <textarea name="" id="newbdd"></textarea><br>
-            <button onclick="showbdd()"> Valider </button>
+            <p>Le bouton sauve génère un fichier db.js à placer dans l'activité Moodle avec le fichier index.html.</p>
+            <button onclick="showbdd()"> Sauver </button>
             <button onclick="ajoutp()"> Ajouter un patient </button>
         </footer>
     </section>
     <section id="sect_admin">
         <header>
-            <div onclick="goto('sect_admin','sect_dossiers')">Retour</div>
             <div class="actif">Administratif</div>
-            <div onclick="goto('sect_admin','sect_macro')">Macro cible</div>
-            <div onclick="goto('sect_admin','sect_soins')">Diagramme de soin</div>
-            <div onclick="goto('sect_admin','sect_diag')">Panneau</div>
-            <div onclick="goto('sect_admin','sect_trans')">Transmission ciblée</div>            
+            <div><a href="#sect_macro">Macro cible</a></div>
+            <div><a href="#sect_soins">Diagramme de soin</a></div>
+            <div><a href="#sect_diag">Panneau</a></div>
+            <div><a href="#sect_trans">Transmission ciblée</a></div>            
 
         </header>
         <div class="form">
@@ -216,12 +214,12 @@
     </section>
     <section id="sect_macro">
         <header>
-            <div onclick="goto('sect_macro','sect_dossiers')">Retour</div>
-            <div onclick="goto('sect_macro','sect_admin')">Administratif</div>
+            <div><a href="#">Retour</a></div>
+            <div><a href="#sect_admin">Administratif</a></div>
             <div class="actif">Macro cible</div>
-            <div onclick="goto('sect_macro','sect_soins')">Diagramme de soin</div>
-            <div onclick="goto('sect_macro','sect_diag')">Panneau</div>
-            <div onclick="goto('sect_macro','sect_trans')">Transmission ciblée</div>            
+            <div><a href="#sect_soins">Diagramme de soin</a></div>
+            <div><a href="#sect_diag">Panneau</a></div>
+            <div><a href="#sect_trans">Transmission ciblée</a></div>            
 
         </header>
         <div class="form">
@@ -247,12 +245,12 @@
     </section>
     <section id="sect_soins">
         <header>
-            <div onclick="goto('sect_soins','sect_dossiers')">Retour</div>
-            <div onclick="goto('sect_soins','sect_admin')">Administratif</div>
-            <div onclick="goto('sect_soins','sect_macro')">Macro cible</div>
+            <div><a href="#">Retour</a></div>
+            <div><a href="#sect_admin">Administratif</a></div>
+            <div><a href="#sect_macro">Macro cible</a></div>
             <div class="actif">Diagramme de soin</div>
-            <div onclick="goto('sect_soins','sect_diag')">Panneau</div>
-            <div onclick="goto('sect_soins','sect_trans')">Transmission ciblée</div>            
+            <div><a href="#sect_diag">Panneau</a></div>
+            <div><a href="#sect_trans">Transmission ciblée</a></div>            
         </header>
         <article id="tabsoin">
         </article>
@@ -265,12 +263,13 @@
     </section>
     <section id="sect_diag">
         <header>
-            <div onclick="goto('sect_diag','sect_dossiers')">Retour</div>
-            <div onclick="goto('sect_diag','sect_admin')">Administratif</div>
-            <div onclick="goto('sect_diag','sect_macro')">Macro cible</div>
-            <div onclick="goto('sect_diag','sect_soins')">Diagramme de soin</div>
+            <div><a href="#">Retour</a></div>
+            <div><a href="#sect_admin">Administratif</a></div>
+            <div><a href="#sect_macro">Macro cible</a></div>
+            <div><a href="#sect_soins">Diagramme de soin</a></div>
             <div class="actif">Panneau</div>
-            <div onclick="goto('sect_diag','sect_trans')">Transmission ciblée</div>            
+            <div><a href="#sect_trans">Transmission ciblée</a></div>            
+
 
         </header>
             <div id="popup">
@@ -502,11 +501,11 @@
     </section>
     <section id="sect_trans">
         <header>
-            <div onclick="goto('sect_trans','sect_dossiers')">Retour</div>
-            <div onclick="goto('sect_trans','sect_admin')">Administratif</div>
-            <div onclick="goto('sect_trans','sect_macro')">Macro cible</div>
-            <div onclick="goto('sect_trans','sect_soins')">Diagramme de soin</div>
-            <div onclick="goto('sect_trans','sect_diag')">Panneau</div>
+            <div><a href="#">Retour</a></div>
+            <div><a href="#sect_admin">Administratif</a></div>
+            <div><a href="#sect_macro">Macro cible</a></div>
+            <div><a href="#sect_soins">Diagramme de soin</a></div>
+            <div><a href="#sect_diag">Panneau</a></div>
             <div class="actif">Transmission ciblée</div>            
         </header>
         <article id="saisietrans">
@@ -569,7 +568,15 @@
                 document.getElementById("sect_dossiers").style.display = "block";
         }
         function showbdd() {
-            document.getElementById('newbdd').value = "var bdd = " + JSON.stringify(bdd) + ";";
+            const jsonData = "var bdd = " + JSON.stringify(bdd) + ";";
+            const blob = new Blob([jsonData], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const downloadLink = document.createElement('a');
+            downloadLink.href = url;
+            downloadLink.download = 'bd.js';
+            document.body.appendChild(downloadLink); // Ajoute le lien au DOM temporairement
+            downloadLink.click(); // Simule un clic
+            document.body.removeChild(downloadLink); // Supprime le lien du DOM
         }
 
         function gotoAdmin(id){     //quand on vient du choix du patient => actualisation 
@@ -824,12 +831,6 @@
             bdd.patients[_id].mac_env = document.getElementById('mac_env').value;
             bdd.patients[_id].mac_dev = document.getElementById('mac_dev').value;
             alert("Les modifications sont validée.");
-        }
-
-        function goto(origine, destination){        //change de page active
-            if(destination == 'sect_dossiers') {
-                document.getElementById("phpreponse").value = JSON.stringify(bdd);
-            }
         }
 
         function showpopup(numero){
