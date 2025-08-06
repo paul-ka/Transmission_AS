@@ -160,7 +160,8 @@
         <div id="dossiers">
         </div>
         <footer>
-            <button onclick="navigator.clipboard.writeText(JSON.stringify(bdd)).then(alert('Fermer cette alerte puis collez votre réponse le blocnote ou dans gedit.'));"> Valider </button>
+            <!-- <button onclick="navigator.clipboard.writeText(JSON.stringify(bdd)).then(alert('Fermer cette alerte puis collez votre réponse le blocnote ou dans gedit.'));"> Valider </button> -->
+            <button onclick="exportBDD()"> Valider </button>
             <button onclick="ajoutp()"> + </button>
         </footer>
     </section>
@@ -966,7 +967,17 @@
             <div>Résultat</div>`;
         document.getElementById("saisietrans").innerHTML=transvide;
         }
-            
+        function exportBDD(){
+            const jsonData = JSON.stringify(bdd);
+            const blob = new Blob([jsonData], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const downloadLink = document.createElement('a');
+            downloadLink.href = url;
+            downloadLink.download = bdd.eleve + '.json';
+            document.body.appendChild(downloadLink); // Ajoute le lien au DOM temporairement
+            downloadLink.click(); // Simule un clic
+            document.body.removeChild(downloadLink); // Supprime le lien du DOM
+        }    
     </script>
 
 </body>
